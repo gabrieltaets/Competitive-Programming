@@ -1,14 +1,28 @@
+/* Gabriel Augusto Alves Taets		*/
+/* Universidade Federal de Itajuba	*/
+/* gabrieltaets at gmail.com 		*/
+/* github.com/gabrieltaets/ 		*/
+
 #include <bits/stdc++.h>
+#define F first
+#define S second
+#define mp make_pair
+#define pb push_back
+#define INF 0x3f3f3f3f
+#define LINF 0x3f3f3f3f3f3f3f3fLL
 #define MAXN 1000010
 using namespace std;
-
-typedef unsigned long long ll;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef vector<ii> vii;
 typedef char HType;
 const int P1 = 57, P2 = 57;
  
 struct Hash {
-    ll h1, h2;
-    Hash(ll a = 0, ll b = 0) { h1 = a; h2 = b; }
+    ull h1, h2;
+    Hash(ull a = 0, ll b = 0) { h1 = a; h2 = b; }
     void append(HType c) {
         h1 = (P1*h1 + c);
         h2 = (P2*h2 + c);
@@ -52,44 +66,33 @@ Hash get_hash(int l, int r, vector<Hash> &hashv) {
 
 vector<Hash> v1;
 vector<int> sz;
-string str;
-int ans;
+string str,ans;
 
 int main(){
-  getline(cin,str);
-  int l = 0, r = str.size(), mid;
-  v1 = build_hash(str.size(),str.c_str());
-  for(int i = 0; i < str.size()-1; i++) if(str[i] == str[str.size()-1]) sz.push_back(i+1);
-  r = 2*sz[sz.size()-1];
-  bool debug = false;
-  debug = true;
-  //cout << "TESTE\n";
-  if(!sz.empty()) while(l <= r){
-    int i, meio = (l+r)/2;
-    cout << "MEIO = " << meio << endl;
-    getchar();
-    //if(meio < 0 || meio >= sz.size()) break;
-    bool middle = false, end = false;
-    mid = meio;
-    Hash h = get_hash(0,mid-1,v1);
-    if(debug) cout << "Looking for \"" << str.substr(0,mid) << "\": " << h.h1 << endl;
-    ll tofind = h.h1;
-    
-    for(i = 1; i + mid < str.size(); i++){
-      if(debug) printf("i = %d  mid = %d\n",i,mid);
-      h = get_hash(i,i+mid-1,v1);
-      if(debug) cout << "Hashing \"" << str.substr(i,mid) << "\": " << h.h1 << endl;
-      if(h.h1 == tofind) middle = true;
-    }
-    h = get_hash(i,i+mid-1,v1);
-    if(debug) cout << "Hashing \"" << str.substr(i,mid) << "\": " << h.h1 << endl;
-    if(h.h1 == tofind) end = true;
-    if(middle && end){
-      ans = mid;
-      l = meio + 1;
-    } 
-    else r = meio - 1;
-  }
-  cout << (ans==0?(string)"Just a legend":str.substr(0,ans)) << endl;
-  return 0;
+	getline(cin,str);
+	v1 = build_hash(str.size(),str.c_str());
+	for(int i = 0; i < str.size()-1; i++) if(str[0] == str[str.size()-i-1]) sz.pb(i+1);
+	int l = 0, r = sz.size()-1, ans = 0, mid;
+	if(!sz.empty()) while(l <= r){
+	  	mid = (l+r)/2;
+	  	int x = 0;
+	  	int len = sz[mid];
+	  	//printf("checking for length %d\n",len);
+		if(get_hash(0, len-1, v1) == get_hash(str.size()-len, str.size()-1, v1)){
+			for(int i = 1; i + len < str.size(); i++){
+				if(get_hash(0,len-1, v1) == get_hash(i, i+len-1, v1)){
+					x = len;
+					break;
+				}
+			}
+		}
+		if(x == len){
+			//printf("sucess\n");
+			ans = len;
+			l = mid+1;
+		}
+		else r = mid-1;
+	}
+	printf("%s\n",ans?str.substr(0,ans).c_str():"Just a legend");
+  	return 0;
 }

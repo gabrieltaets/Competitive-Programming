@@ -1,3 +1,18 @@
+# Ignore everything
+/*
+
+!/.gitignore
+
+# Except for these folders
+!codeforces/
+!uri/
+!uva/
+!spoj/
+!codechef/
+!icpc/
+!topcoder/
+!timus/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
